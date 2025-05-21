@@ -6,15 +6,6 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 🏆 Features
-- **Secure Static Frontend**: Hosted on S3 with CloudFront + OAI for HTTPS and restricted access.
-- **Fault-Tolerant Workflow**: Step Functions with retries and error handling.
-- **Least-Privilege IAM**: Fine-grained permissions for Lambda and SES.
-- **Monitoring Ready**: CloudWatch Alarms for failures.
-- **Infrastructure as Code**: Deploy with AWS SAM.
-
----
-
 ## 📌 Objectives
 ✅ Configure AWS SES
 - **Verify sender email**
@@ -46,6 +37,34 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 ## 🏗️ Architecture
 ![Architecture Diagram](diagram/ServerlessApplication.png)
 
+---
+
+## 📋 Steps
+1. Configure SES
+    - Go to SES → Verify Email Address (confirm via inbox).
+2. Create Lambda Function
+    - Write Python code to send emails via SES.
+    - Attach IAM role with ses:SendEmail and logging permissions.
+3. Build Step Functions Workflow
+    - Define state machine with retries/error handling.
+    - Connect to Lambda.
+4. Deploy API Gateway
+    - Create REST API with POST method.
+    - Enable CORS and redeploy.
+5. Host Frontend on S3
+    - Upload index.html with API Gateway endpoint.
+    - Set bucket policy for public read access (or use CloudFront).
+6. Test & Monitor
+    - Submit form → Check email delivery.
+
+---
+
+## 📸 Visuals
+| Results | Image |
+|-------------|-------|
+| S3 Static Website | ![Alert](images/Topic.png) |
+| Lambda Test Email | ![Alert](images/AWSBudgetSNS.png) |
+| S3 Static Website Email | ![Alert](images/LambdaEmail.png) |
 
 ---
 
