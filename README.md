@@ -62,81 +62,75 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 ## 📸 Visuals
 | Results | Image |
 |-------------|-------|
-| S3 Static Website | ![Alert](images/Topic.png) |
-| Lambda Test Email | ![Alert](images/AWSBudgetSNS.png) |
-| S3 Static Website Email | ![Alert](images/LambdaEmail.png) |
+| S3 Static Website | ![Alert](images/S3Website.png) |
+| Lambda Test Email | ![Alert](images/LambdaEmail.png) |
+| S3 Static Website Email | ![Alert](images/S3Email.png) |
 
 ---
 
-## 🚀 Deployment
-
-### Prerequisites
-- AWS Account with SES verified email(s)
-- AWS CLI configured (`aws configure`)
-- AWS SAM CLI installed (`sam --version`)
-
-### 1. Backend Deployment
+### **Code Snippets**
+#### **Lambda Python Code** (`scripts/LambdaPythonFunction.py`):
 ```bash
-cd backend
-sam build
-sam deploy --guided
-```
-> Follow prompts to set stack name/region. Note the API Gateway endpoint output.
+import boto3
+import json
 
-### 2. Frontend Deployment
-1. **Update `frontend/script.js`** with your API Gateway endpoint:
-   ```javascript
-   const API_URL = "https://YOUR_API_ID.execute-api.REGION.amazonaws.com/prod/sendEmail";
-   ```
 
-2. **Sync to S3**:
-   ```bash
-   aws s3 sync frontend/ s3://YOUR_BUCKET_NAME --acl public-read
-   ```
+ses = boto3.client('ses')
 
-3. **Set up CloudFront** (Optional but recommended):
-   - Create distribution with S3 origin and OAI.
-   - Enforce HTTPS and set `index.html` as default root.
 
----
-
-## 🔒 Security Hardening
-| Step                  | Action                                  |
-|-----------------------|-----------------------------------------|
-| **CloudFront + OAI**  | Replace public S3 access with CDN       |
-| **API Gateway Keys**  | Enable and enforce `x-api-key` header   |
-| **Least-Privilege**   | Restrict SES/Lambda permissions         |
-| **HTTPS Enforcement** | Redirect HTTP → HTTPS in CloudFront     |
-
----
-
-## 📊 Monitoring
-```yaml
-# Example CloudWatch Alarms (AWS SAM snippet)
-Alarms:
-  EmailFailures:
-    Type: AWS::CloudWatch::Alarm
-    Properties:
-      MetricName: ExecutionsFailed
-      Namespace: AWS/States
-      Threshold: 1
-      ComparisonOperator: GreaterThanThreshold
+def lambda_handler(event, context):
+    try:
+        # Validate input
+        required_fields = ['email', 'subject', 'message']
+        if not all(field in event for field in required_fields):
+            raise ValueError("Missing required fields")
+            
+        response = ses.send_email(
+            Source='verified-email@example.com',  # Replace with your SES email
+            Destination={'ToAddresses': [event['email']]},
+            Message={
+                'Subject': {'Data': event['subject']},
+                'Body': {'Text': {'Data': event['message']}}
+            }
+        )
+        return {
+            'statusCode': 200,
+            'body': json.dumps({'message': 'Email sent successfully', 'response': response})
+        }
+    except Exception as e:
+        return {
+            'statusCode': 500,
+            'body': json.dumps({'error': str(e)})
+        }
 ```
 
----
+#### **CORS Policy**:
+```bash
+<CORSConfiguration>
+  <CORSRule>
+    <AllowedOrigin>https://your-website-bucket.s3-website.REGION.amazonaws.com</AllowedOrigin>
+    <AllowedMethod>POST</AllowedMethod>
+    <AllowedHeader>*</AllowedHeader>
+  </CORSRule>
+```
 
-## 💡 Extending the Project
-- **Add Database**: Log submissions to DynamoDB.
-- **Templated Emails**: Use SES templates for consistent formatting.
-- **SMS Alerts**: Trigger SNS on failures.
+#### **S3 Bucket Policy**:
+```bash
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": "*",
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::your-website-bucket/*"
+    }
+  ]
+}
+```
 
----
 
-## 📜 License
-MIT License. See [LICENSE](./LICENSE) for details.
-
----
-
-## 🙏 Credits
-- Inspired by [AWS Serverless Patterns](https://serverlessland.com)
-- [AWS SAM Template Reference](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-function.html)
+## 🚀 How to Deploy
+```bash
+# Clone repo
+git clone https://github.com/nickjduran15/AWS-SESapp.git
