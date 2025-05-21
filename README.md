@@ -27,7 +27,7 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 ---
 
 ## 🏗️ Architecture
-![Architecture Diagram](diagram/ServerlessApplicatqion.png)
+![Architecture Diagram](diagram/ServerlessApplication.png)
 
 
 ---
