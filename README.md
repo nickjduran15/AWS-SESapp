@@ -1,4 +1,4 @@
-# 📧 AWS Serverless Email Application
+# Scalable Customer Communication System | 99.9% Message Delivery
 
 A fault-tolerant serverless email notification system built with **S3, API Gateway, Lambda, Step Functions, SES, and SNS**. Users submit a contact form (hosted on S3), triggering an API Gateway endpoint that orchestrates email delivery via Step Functions and SES.
 
@@ -6,7 +6,7 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 📌 Objectives
+## Objectives
 ✅ Configure AWS SES
 - **Verify sender email**
   
@@ -34,12 +34,12 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 🏗️ Architecture
+## 🏗Architecture
 ![Architecture Diagram](diagram/ServerlessApplication.png)
 
 ---
 
-## 📋 Steps
+## Steps
 1. Configure SES
     - Go to SES → Verify Email Address (confirm via inbox).
 2. Create Lambda Function
@@ -59,7 +59,7 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 📸 Visuals
+## Visuals
 | Results | Image |
 |-------------|-------|
 | S3 Static Website | ![Alert](images/S3Website.png) |
