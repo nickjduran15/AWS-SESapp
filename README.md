@@ -23,7 +23,7 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 🛠️ Technologies Used
+## 🛠Technologies Used
 | Service               | Use Case                          |
 |-----------------------|-----------------------------------|
 | **Amazon S3**         | Host static frontend (HTML/CSS/JS)|
@@ -34,7 +34,7 @@ A fault-tolerant serverless email notification system built with **S3, API Gatew
 
 ---
 
-## 🏗Architecture
+## Architecture
 ![Architecture Diagram](diagram/ServerlessApplication.png)
 
 ---
